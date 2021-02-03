@@ -1,0 +1,20 @@
+version: '3'
+services:
+  php:
+    image: yiisoftware/yii2-php:7.4-apache
+    volumes:
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      - ./:/app:delegated
+    ports:
+      - '8000:80'
+  mysql:
+    restart: always
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3306:3306
+    environment:
+      # Пароль к БД
+      MYSQL_ROOT_PASSWORD: Passw0rd_positron
+      # Создаваемая по умолчанию бд
+      MYSQL_DATABASE: positron_db
