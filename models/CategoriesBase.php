@@ -14,7 +14,7 @@ use Yii;
  *
  * @property Books[] $books
  */
-class CategoriesBase extends \yii\db\ActiveRecord
+class CategoriesBase extends ModelBase
 {
     /**
      * {@inheritdoc}

@@ -9,5 +9,7 @@ namespace app\models;
  */
 class CategoriesQuery extends CategoriesBaseQuery
 {
-	
+	public function byName(string $name):\yii\db\ActiveQuery{
+		return $this->where(['name' => $name]);
+	}
 }

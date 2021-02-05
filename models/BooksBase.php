@@ -12,13 +12,16 @@ use Yii;
  * @property string|null $isbn
  * @property int|null $page_count
  * @property string|null $published_date
- * @property int|null $id_categories
  * @property string|null $created_at
  * @property string|null $updated_at
  * @property string|null $thumbnail
+ * @property string|null $short_description
+ * @property string|null $long_description
+ * @property int $id_statuses
  *
- * @property Categories $categories
+ * @property Statuses $statuses
  * @property BooksAuthors[] $booksAuthors
+ * @property BooksCategories[] $booksCategories
  */
 class BooksBase extends \yii\db\ActiveRecord
 {
@@ -36,13 +39,13 @@ class BooksBase extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title'], 'required'],
-            [['page_count', 'id_categories'], 'integer'],
+            [['title', 'id_statuses'], 'required'],
+            [['page_count', 'id_statuses'], 'integer'],
             [['published_date', 'created_at', 'updated_at'], 'safe'],
+            [['short_description', 'long_description'], 'string'],
             [['title', 'thumbnail'], 'string', 'max' => 255],
             [['isbn'], 'string', 'max' => 10],
-            [['isbn'], 'unique'],
-            [['id_categories'], 'exist', 'skipOnError' => true, 'targetClass' => Categories::className(), 'targetAttribute' => ['id_categories' => 'id']],
+            [['id_statuses'], 'exist', 'skipOnError' => true, 'targetClass' => Statuses::className(), 'targetAttribute' => ['id_statuses' => 'id']],
         ];
     }
 
@@ -57,27 +60,29 @@ class BooksBase extends \yii\db\ActiveRecord
             'isbn' => 'Isbn',
             'page_count' => 'Page Count',
             'published_date' => 'Published Date',
-            'id_categories' => 'Id Categories',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'thumbnail' => 'Thumbnail',
+            'short_description' => 'Short Description',
+            'long_description' => 'Long Description',
+            'id_statuses' => 'Id Statuses',
         ];
     }
 
     /**
-     * Gets query for [[Categories]].
+     * Gets query for [[Statuses]].
      *
-     * @return \yii\db\ActiveQuery|CategoriesQuery
+     * @return \yii\db\ActiveQuery
      */
-    public function getCategories()
+    public function getStatuses()
     {
-        return $this->hasOne(Categories::className(), ['id' => 'id_categories']);
+        return $this->hasOne(Statuses::className(), ['id' => 'id_statuses']);
     }
 
     /**
      * Gets query for [[BooksAuthors]].
      *
-     * @return \yii\db\ActiveQuery|BooksAuthorsQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getBooksAuthors()
     {
@@ -85,11 +90,12 @@ class BooksBase extends \yii\db\ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
-     * @return BooksBaseQuery the active query used by this AR class.
+     * Gets query for [[BooksCategories]].
+     *
+     * @return \yii\db\ActiveQuery
      */
-    public static function find()
+    public function getBooksCategories()
     {
-        return new BooksBaseQuery(get_called_class());
+        return $this->hasMany(BooksCategories::className(), ['books_id' => 'id']);
     }
 }

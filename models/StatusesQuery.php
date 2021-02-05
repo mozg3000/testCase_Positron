@@ -9,6 +9,8 @@ namespace app\models;
  */
 class StatusesQuery extends StatusesBaseQuery
 {
-  
+  public function byName(string $name):\yii\db\ActiveQuery{
+		return $this->where(['name' => $name]);
+	}
 	
 }

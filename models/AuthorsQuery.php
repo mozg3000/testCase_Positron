@@ -9,5 +9,7 @@ namespace app\models;
  */
 class AuthorsQuery extends AuthorsBaseQuery
 {
-	
+	public function byName(string $name):\yii\db\ActiveQuery{
+		return $this->where(['name' => $name]);
+	}
 }

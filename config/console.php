@@ -15,6 +15,17 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
         '@tests' => '@app/tests',
     ],
+		'container' => [
+			'singletons' => [
+				\app\services\parsers\interfaces\DAOInterface::class => [
+				'class' => \app\services\parsers\DAOJson::class
+				],
+				\app\services\parsers\AbstractParser::class => function($container, $params, $config){
+					$dao = new \app\services\parsers\DAOJson();
+					return new \app\services\parsers\BookParser($dao, ['url' => 'https://gitlab.com/prog-positron/test-app-vacancy/-/raw/master/books.json']);
+				}
+		]
+		],
     'components' => [
         'cache' => [
             'class' => 'yii\caching\FileCache',
