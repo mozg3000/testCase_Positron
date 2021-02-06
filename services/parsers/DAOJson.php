@@ -6,7 +6,7 @@ class DAOJson implements \app\services\parsers\interfaces\DAOInterface{
 		return $this->getJsonByUrl($param['url']??'');
 	}
 	private function getJsonByUrl(string $url){
-		// return json_decode(file_get_contents($url), true);
-		return json_decode(file_get_contents('/app/services/parsers/data.json'), true);
+		return json_decode(file_get_contents($url), true);
+		// return json_decode(file_get_contents('/app/services/parsers/data.json'), true);
 	}
 }

@@ -61,7 +61,7 @@ class BookInfo extends \yii\db\ActiveRecord	{
 	public function validateISBN($attribute, $param){
 		if($this->isbn !== ''){
 			$ISBN = \app\models\Books::find()->byISBN($this->$attribute)->one();
-			var_dump($ISBN);
+			//var_dump($ISBN);
 			if($ISBN){
 				$this->addError($attribute, 'Книга с таким ISBN уже добавлена');
 			}
