@@ -25,4 +25,7 @@ class Categories extends CategoriesBase
     {
         return new CategoriesQuery(get_called_class());
     }
+	public function __toString(){
+		return $this->name;
+	}
 }

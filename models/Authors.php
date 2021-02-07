@@ -25,4 +25,7 @@ class Authors extends AuthorsBase
     {
         return new AuthorsQuery(get_called_class());
     }
+	public function __toString(){
+		return $this->name;
+	}
 }

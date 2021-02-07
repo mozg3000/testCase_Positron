@@ -25,6 +25,7 @@ use Yii;
  */
 class BooksBase extends \yii\db\ActiveRecord
 {
+	private $thumbnail;
     /**
      * {@inheritdoc}
      */
@@ -48,7 +49,15 @@ class BooksBase extends \yii\db\ActiveRecord
             [['id_statuses'], 'exist', 'skipOnError' => true, 'targetClass' => Statuses::className(), 'targetAttribute' => ['id_statuses' => 'id']],
         ];
     }
-
+	public function fields(){
+		return [
+			'title',
+			'isbn',
+			'page_count',
+			'shot_description',
+			'long_description',
+		];
+	}
     /**
      * {@inheritdoc}
      */

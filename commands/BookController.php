@@ -43,7 +43,7 @@ class BookController extends \yii\console\Controller{
 		(new \GuzzleHttp\Promise\EachPromise($promises, [
 			'concurrency' => 4,
 		  'fulfilled' => function ($result) {
-			  echo $result.PHP_EOL;
+			  print_r($result);
 			},
 		  'rejected' => function ($reason) {
 			  echo 'rejected'.PHP_EOL;
