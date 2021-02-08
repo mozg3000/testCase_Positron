@@ -7,6 +7,21 @@ use Yii;
 /**
  * This is the model class for table "books".
  *
+ * @property int $id
+ * @property string $title
+ * @property string|null $isbn
+ * @property int|null $page_count
+ * @property string|null $published_date
+ * @property string|null $created_at
+ * @property string|null $updated_at
+ * @property string|null $thumbnail
+ * @property string|null $short_description
+ * @property string|null $long_description
+ * @property int $id_statuses
+ *
+ * @property Statuses $statuses
+ * @property BooksAuthors[] $booksAuthors
+ * @property BooksCategories[] $booksCategories
  */
 class Books extends BooksBase
 {
@@ -14,14 +29,40 @@ class Books extends BooksBase
 	const SCENARIO_UPDATE = 'update book';
 	public $image;
 	public $statusName;
-    /**
-     * {@inheritdoc}
-     * @return BooksQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new BooksQuery(get_called_class());
-    }
+	public function rules(){
+		return array_merge([
+			 ['title', 'unique', 'on' => \app\models\Books::SCENARIO_CREATE],
+			 ['title', 'exist', 'on' => \app\models\Books::SCENARIO_UPDATE],
+			 ['isbn', 'match', 'pattern' => '/^\d{10}|\s$/', 'message' => 'isbn, должен быть десятизначным числом или пустой строкой'],
+			 ['isbn', 'unique', 'on' => \app\models\Books::SCENARIO_CREATE],
+			 ['isbn', 'exist', 'on' => \app\models\Books::SCENARIO_UPDATE],
+			],
+			parent::rules()
+		);
+	}
+	public function scenarios(){
+		return array_merge([
+			self::SCENARIO_CREATE => ['title'],
+			self::SCENARIO_UPDATE => ['title'],
+	], parent::scenarios());
+	}
+	public function validateISBN($attribute, $param){
+		if($this->isbn !== ''){
+			$ISBN = \app\models\Books::find()->byISBN($this->$attribute)->one();
+			//var_dump($ISBN);
+			if($ISBN){
+				$this->addError($attribute, 'Книга с таким ISBN уже добавлена');
+			}
+		}
+	}
+	/**
+	 * {@inheritdoc}
+	 * @return BooksQuery the active query used by this AR class.
+	 */
+	public static function find()
+	{
+			return new BooksQuery(get_called_class());
+	}
 	public function getStatus(){
 		return $this->statusName?$this->statusName:$this->statuses->name;
 	}
@@ -39,5 +80,8 @@ class Books extends BooksBase
 	}
 	public function getPublishedDate(){
 		return $this->published_date?(new \DateTime($this->published_date))->format('d.m.Y'):'';
+	}
+	public function setPublishedDate(string $value){
+		$this->published_date = $value;
 	}
 }

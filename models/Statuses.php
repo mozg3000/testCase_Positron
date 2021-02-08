@@ -19,4 +19,10 @@ class Statuses extends StatusesBase
     {
         return new StatusesQuery(get_called_class());
     }
+		public function attributeLabels()
+    {
+        return [
+            'name' => 'Статус',
+        ];
+    }
 }

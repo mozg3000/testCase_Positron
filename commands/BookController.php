@@ -15,7 +15,6 @@ class BookController extends \yii\console\Controller{
 	public function actionParse(){
 		$client = $this->client;
 		$parser = $this->parser;
-		//$promises = [];
 		$promise = null;
 		$promises = (function() use (&$client, &$parser){
 			foreach($parser as $bookData){
@@ -31,7 +30,7 @@ class BookController extends \yii\console\Controller{
 								echo 'catch'.PHP_EOL;
 								$promise->reject($bookInfo->isbn);
 							}
-							$promise->resolve($bookInfo->isbn . 'done');
+							$promise->resolve($bookInfo->isbn . 'done'.PHP_EOL);
 						}else{
 							
 							$promise->resolve($bookInfo->errors . '    errors' );

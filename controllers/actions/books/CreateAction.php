@@ -14,22 +14,23 @@ class CreateAction extends \yii\base\Action{
 			$bookInfo = \Yii::$app->request->Post();
 		// var_dump($bookInfo['Books']['categoriesList']);die;
 			$model->load($bookInfo);
-			// var_dump($bookInfo['Statuses']['name']);die;
+			//var_dump($model);die;
+			// $model->published_date = $bookInfo['Books']['publishedDate']);
 			$statusName = $bookInfo['Statuses']['name'];
 			$statusFound = \app\models\Statuses::find()->byName($statusName)->one();
 			$status->name = $statusName;
-			// var_dump($statusFound);
 			$category = null;
 			if($statusFound){
 				$model->id_statuses = $statusFound->id;
+				$model->setScenario($this->controller->createScenario);
 				if($model->save()){
 					$categories = explode(',', $bookInfo['Books']['categoriesList']);
 					if($categories){
 						foreach($categories as $categoryName){
-							$categoryFound = \app\models\Categories::find()->byName($categoryName);
+							$categoryFound = \app\models\Categories::find()->byName($categoryName)->one();
 							$booksCategories = new \app\models\BooksCategories();
 							if(!$categoryFound){
-								$category = new \app\models\Categoies();
+								$category = new \app\models\Categories();
 								$category->name = $categoryName;
 								if($category->save()){
 									$booksCategories->categories_id = $category->id;
@@ -44,7 +45,7 @@ class CreateAction extends \yii\base\Action{
 							
 						}
 					}
-					}
+				}
 					$authors = explode(',', $bookInfo['Books']['authorsList']);
 					if($authors){
 						foreach($authors as $authorName){
@@ -69,9 +70,9 @@ class CreateAction extends \yii\base\Action{
 				$status->addError('name', 'Нет такого статуса');
 			}
 			
-			//var_dump($categories);die;
+			//var_dump($model->errors);die;
 		}
-		// var_dump($status);
+		//var_dump($model->errors);die;
 		// $status->addError('name', 'Нет такого статуса');
 		return $this->controller->render('create', [
 			'model' => $model,

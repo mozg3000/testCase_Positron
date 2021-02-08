@@ -8,6 +8,10 @@ class ViewAction extends \yii\base\Action{
 		if($this->checkAccess){
 			call_user_func($this->checkAccess, $this->id, $model);
 		}
-		return $this->controller->render('view', ['model' => $model]);
+		if($model){
+			return $this->controller->render('view', ['model' => $model]);
+		}else{
+			throw new \yii\web\NotFoundHttpException('Wrong book\'s id');
+		}
 	}
 }
