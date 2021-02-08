@@ -10,12 +10,8 @@ class CreateAction extends \yii\base\Action{
 		$model = new $this->modelClass();
 		$status = new \app\models\Statuses();
 		if(\Yii::$app->request->isPost){
-			//$bookInfo = new \app\models\BookInfo();
 			$bookInfo = \Yii::$app->request->Post();
-		// var_dump($bookInfo['Books']['categoriesList']);die;
 			$model->load($bookInfo);
-			//var_dump($model);die;
-			// $model->published_date = $bookInfo['Books']['publishedDate']);
 			$statusName = $bookInfo['Statuses']['name'];
 			$statusFound = \app\models\Statuses::find()->byName($statusName)->one();
 			$status->name = $statusName;
@@ -46,34 +42,31 @@ class CreateAction extends \yii\base\Action{
 						}
 					}
 				}
-					$authors = explode(',', $bookInfo['Books']['authorsList']);
-					if($authors){
-						foreach($authors as $authorName){
-							$authorFound = \app\models\Authors::find()->byName($authorName)->one();
-							$booksAuthors = new \app\models\BooksAuthors();
-							if(!$authorFound){
-								$author = new \app\models\Authors();
-								$author->name = $authorName;
-								if($author->save()){
-									$booksAuthors->authors_id = $author->id;
-									$booksAuthors->books_id = $model->id;
-									$booksAuthors->save();
-								}
-							}else{
-								$booksAuthors->authors_id = $authorFound->id;
+				$authors = explode(',', $bookInfo['Books']['authorsList']);
+				if($authors){
+					foreach($authors as $authorName){
+						$authorFound = \app\models\Authors::find()->byName($authorName)->one();
+						$booksAuthors = new \app\models\BooksAuthors();
+						if(!$authorFound){
+							$author = new \app\models\Authors();
+							$author->name = $authorName;
+							if($author->save()){
+								$booksAuthors->authors_id = $author->id;
 								$booksAuthors->books_id = $model->id;
 								$booksAuthors->save();
 							}
+						}else{
+							$booksAuthors->authors_id = $authorFound->id;
+							$booksAuthors->books_id = $model->id;
+							$booksAuthors->save();
 						}
 					}
+				}
+				$this->controller->redirect('/books/'.$model->id);
 			}else{
 				$status->addError('name', 'Нет такого статуса');
 			}
-			
-			//var_dump($model->errors);die;
 		}
-		//var_dump($model->errors);die;
-		// $status->addError('name', 'Нет такого статуса');
 		return $this->controller->render('create', [
 			'model' => $model,
 			'status' => $status
